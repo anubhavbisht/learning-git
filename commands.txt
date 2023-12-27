@@ -1,0 +1,219 @@
+# ---------------------------------------------------------------------------- #
+#                   check git version or if git is installed                   #
+# ---------------------------------------------------------------------------- #
+git --version
+
+# ---------------------------------------------------------------------------- #
+#                              initialize git repo                             #
+# ---------------------------------------------------------------------------- #
+git init
+
+# ---------------------------------------------------------------------------- #
+#                       check status of working directory                      #
+# ---------------------------------------------------------------------------- #
+git status
+
+# ---------------------------------------------------------------------------- #
+#                          add a file in staging area                          #
+# ---------------------------------------------------------------------------- #
+git add .
+git add __filename__
+
+# ---------------------------------------------------------------------------- #
+#                    commiting  staging area changes                           #
+# ---------------------------------------------------------------------------- #
+git commit -m __commitmsg__
+
+# ---------------------------------------------------------------------------- #
+#                              history of commits                              #
+# ---------------------------------------------------------------------------- #
+git log
+
+# ---------------------------------------------------------------------------- #
+#              to move to a particular commit or particular branch             #
+# ---------------------------------------------------------------------------- #
+git checkout commitid
+git checkout branchName
+
+
+# ---------------------------------------------------------------------------- #
+#                             to make a new branch                             #
+# ---------------------------------------------------------------------------- #
+git branch newBranchName(make new branch)
+git checkout newBranchName(to move to newly created branch)
+git checkout master
+git switch branchName(make new branch)
+git switch -c branchName(to make a new branch and then automatically move into that)
+
+git checkout -b newBranchName(to make a new branch and then automatically move into that)
+
+git branch(names of all branches)
+
+# ---------------------------------------------------------------------------- #
+#                               merging branches                               #
+# ---------------------------------------------------------------------------- #
+git merge branchName(merges this branch to the existing branch you are present in)
+
+# ---------------------------------------------------------------------------- #
+#                  to know all files which are in staging area                 #
+# ---------------------------------------------------------------------------- #
+git ls-files
+
+# ---------------------------------------------------------------------------- #
+#                        to remove all unstaged changes                        #
+# ---------------------------------------------------------------------------- #
+git checkout .(to remove all unstaged changes at once)
+git checkout __filename__(to remove unstaged changes from a particular file)
+git restore .(to remove all unstaged changes at once)
+git restore __filename__(to remove unstaged changes from a particular file)
+git clean -dn(to list all files which you want to remove and are currently unstaged)
+git clean -df(to remove all files which you want to remove and are currently unstaged)
+git stash
+git stash pop
+
+# ---------------------------------------------------------------------------- #
+#                            undoing staged changes                            #
+# ---------------------------------------------------------------------------- #
+git reset __filename__(first bring changes to staged area-->converting staged changes back to unstaged)
+git checkout .(then remove similarly as above unstage changes)
+git restore --staged __filename__(first bring changes to staged area-->converting staged changes back to unstaged)
+git checkout .(then remove similarly as above unstage changes)
+
+# ---------------------------------------------------------------------------- #
+#                        deleting commits with git reset                       #
+# ---------------------------------------------------------------------------- #
+git reset --soft HEAD~1(removes the commit and changes done in last commit are moved back to staging area not deleted )
+git reset HEAD~1(removes the commit and changes done in last commit are now unstaged.Changes remains in working directory)
+git reset --hard HEAD~1(removes the commit and changes done in last commit are permanently deleted.Changes are not present in working directory nor in staging area )
+
+# ---------------------------------------------------------------------------- #
+#                               deleting a branch                              #
+# ---------------------------------------------------------------------------- #
+git branch -D branchName(to delete a particular branch)
+git branch -D branchName1 branchName2(to delete multiple branches)
+
+# ---------------------------------------------------------------------------- #
+#                        commiting detached head changes                       #
+# ---------------------------------------------------------------------------- #
+So what we have to do basically:
+1. From the detached head(let say a particular commit) create a new branch or if you are in master git branch newBranchName commitId(detached head).
+2. Then go to master branch and merge this branch into master
+
+# ---------------------------------------------------------------------------- #
+#                              What is .gitignore                              #
+# ---------------------------------------------------------------------------- #
+1. Create manually file(.gitIgnore)
+2. Add names of files in .gitignore file
+3. *.log(to ignore all files ending with .log)
+4. web-app/*(to ignore all files of a directory)
+
+# ---------------------------------------------------------------------------- #
+#                                 What is stash                                #
+# ---------------------------------------------------------------------------- #
+1. git stash(it removes unstaged changes and store it in stash for future use)
+2. git stash apply(latest stashed changes will be again reflected in working dir)
+3. git stash pop(latest stashed changes will be again reflected in working dir)
+3. git stash list(it stores all the stashed changes whenever you have basically run git stash)
+4. git stash push -m 'msg'(to identify particular stashed changes with some msg for future reference)
+5. git stash apply index(to unstash a particular entry from stash into working dir)
+6. git stash pop index(to unstash a particular entry from stash into working dir)
+7. git stash clear(to clear whole stash memory for that particular git repo)
+8. git stash drop index(to clear a particular stash entry for that git repo)
+
+# ---------------------------------------------------------------------------- #
+#                    Bringing back lost data through reflog                    #
+# ---------------------------------------------------------------------------- #
+1.git reflog(this command allows us to bring back lost commits or branches)
+let say you had a particular branch(test) and by mistake someone has deleted it
+so what you could do is
+do git reflog
+it will show the commit id of that deleted branch and then
+git checkout lostCommitId
+and you get you work back
+then create branch from here
+Similarly for commit
+
+# ---------------------------------------------------------------------------- #
+#                               Fastforward merge                              #
+# ---------------------------------------------------------------------------- #
+Let say we have a master branch with some commits and after some time you create
+a new feature branch from master.
+So Fastforward merge means that when you try to merge feature branch into master using
+command(you are currently in master branch)
+git merge feature
+master branch has no additional commits after feature branch was created
+Here merge moves head forward but does not create a new commit
+(head,master),and feature are at same postition
+
+# ---------------------------------------------------------------------------- #
+#                    Non Fastforward merge (recursive merge)                   #
+# ---------------------------------------------------------------------------- #
+git merge --no-ff feature
+Recursive merge is preferred when there are additional commits in master branch after 
+feature branch was created
+When we do recursive merge a additional commit is added in master branch
+(head,master) and feature are not at same postition due to additional commit ->feature will be one below than head
+%%Creation of new commit happens%%
+
+# ---------------------------------------------------------------------------- #
+#                             What is rebase(alternative to merge)                            #
+# ---------------------------------------------------------------------------- #
+In rebase what happens when your master has an additional commit (let say m3) after 
+feaure branch was created(let say f1 and f2 are commits in feature branch),
+when you try to rebase master into feature 
+this m3 commit becomes the new base commit for feature branch commits(f1 and f2)
+and then master(updated with m3 commit) gets rebased or merged into feature.
+So basically rebase does not move commits like in Fastforward or recursive one 
+but creates new commits in f3 so that to merge in new master m3.
+
+git rebase master(in feature branch)
+git merge feature(in master)
+%%Creation of new commit id happens%%
+
+# ---------------------------------------------------------------------------- #
+#                       How to abort a merge in conflict                       #
+# ---------------------------------------------------------------------------- #
+git merge --abort
+
+# ---------------------------------------------------------------------------- #
+#                              What is cherrypick                              #
+# ---------------------------------------------------------------------------- #
+cherrypick strategy attaches a specific commit to branch's head
+git cherrypick commitid
+%%Copies commit with new commit id%%
+
+# ---------------------------------------------------------------------------- #
+#                             Local to remote repo                             #
+# ---------------------------------------------------------------------------- #
+git remote add origin url(here origin acts as alias of this repo url)
+git push 
+git pull
+
+# ---------------------------------------------------------------------------- #
+#             what happens when we write -> git push origin master             #
+# ---------------------------------------------------------------------------- #
+# ---------------------------------------------------------------------------- #
+#                         or -> git pull origin master                         #
+# ---------------------------------------------------------------------------- #
+there is no direct connection between our local branch and remote branch
+whenever you push changes in to remote branch
+a new branch is formed i.e. /remotes/origin/master(remote tracking branch)
+all the changes from local are first pushed into this branch
+and then this branch is eventually pushed into remote repo
+
+git branch -a(to see this remote branch)
+this branch is basically a copy of remote branch in our local environment
+
+Similarly when you pull from remote first changes are pulled into this remote 
+tracking branch and then all changes are merged in local master branch
+
+If you push to any remote branch same will be made into out local environment
+in format(/remotes/origin/feature)
+This branch is not editable
+# ---------------------------------------------------------------------------- #
+#                                remote branches                               #
+# ---------------------------------------------------------------------------- #
+git ls-remote(to list all remote branches)
+git fetch origin (to fetch all remote branches)
+
+git pull is a combination of git fetch and git merge
