@@ -217,3 +217,8 @@ git ls-remote(to list all remote branches)
 git fetch origin (to fetch all remote branches)
 
 git pull is a combination of git fetch and git merge
+
+################Shortcuts#############
+1. git commit -am 'ada'(add and commit together)
+2. git log --graph --oneline --decorate
+3. git config --global alias.ac "!git add -A && git commit -m"
